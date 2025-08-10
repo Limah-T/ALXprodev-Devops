@@ -3,7 +3,7 @@ URL="https://pokeapi.co/api/v2/pokemon/"
 status_code=$(curl -s -o /dev/null -w "%{http_code}" "$URL")
 response=$(curl "$URL")
 if [[ "$status_code" -eq 200 ]]; then
-	echo "$response" > data.json
+	echo "$response" | jq '.results[]' > data.json
 else
         echo "$response" > errors.txt
 fi
