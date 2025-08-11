@@ -1,1 +1,1 @@
-Bad Request
+❌ Failed to fetch venusaur
