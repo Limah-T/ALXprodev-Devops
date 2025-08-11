@@ -1,0 +1,50 @@
+!/bin/bash
+# ==============================
+# ALX Advanced Shell Scripting Pokémon Project
+# Covers: Task 0, Task 1, Task 2
+# ==============================
+
+POKE_API="https://pokeapi.co/api/v2/pokemon"
+ERROR_FILE="errors.txt"
+OUTPUT_DIR="pokemon_data"
+PIKACHU_FILE="data.json"
+
+
+# =========================
+# Task 0: API Request Automation (Pikachu)
+# =========================
+echo "Fetching Pikachu data..."
+if curl -s "$POKE_API/pikachu" -o "$PIKACHU_FILE"; then
+    echo "Data for Pikachu saved to $PIKACHU_FILE ✅"
+else
+    echo "Failed to fetch data for Pikachu" >> "$ERROR_FILE"
+fi
+
+# =========================
+# Task 1: Extract Pokémon Data (Pikachu)
+# =========================
+if [[ -f "$PIKACHU_FILE" ]]; then
+    name=$(jq -r '.name' "$PIKACHU_FILE" | sed 's/.*/\u&/')
+    type=$(jq -r '.types[0].type.name' "$PIKACHU_FILE" | sed 's/.*/\u&/')
+    weight=$(jq -r '.weight' "$PIKACHU_FILE")
+    height=$(jq -r '.height' "$PIKACHU_FILE")
+    echo "$name is of type $type, weighs ${weight}kg, and is ${height}m tall."
+fi
+
+# =========================
+# Task 2: Batch Pokémon Data Retrieval
+# =========================
+mkdir -p "$OUTPUT_DIR"
+POKEMONS=("bulbasaur" "ivysaur" "venusaur" "charmander" "charmeleon")
+
+for pokemon in "${POKEMONS[@]}"; do
+    echo "Fetching data for $pokemon..."
+    if curl -s "$POKE_API/$pokemon" -o "$OUTPUT_DIR/$pokemon.json"; then
+        echo "Saved data to $OUTPUT_DIR/$pokemon.json ✅"
+    else
+        echo "Failed to fetch data for $pokemon" >> "$ERROR_FILE"
+    fi
+    sleep 1  # avoid hitting rate limits
+done
+
+echo "All tasks completed. Check '$ERROR_FILE' for any failures."
