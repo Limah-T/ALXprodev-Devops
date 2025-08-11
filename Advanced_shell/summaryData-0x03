@@ -19,7 +19,7 @@ if curl -s "$POKE_API/pikachu" -o "$PIKACHU_FILE"; then
 else
     echo "Failed to fetch data for Pikachu" >> "$ERROR_FILE"
 fi
-
+# [".csv"] ["awk"]
 # =========================
 # Task 1: Extract Pokémon Data (Pikachu)
 # =========================
